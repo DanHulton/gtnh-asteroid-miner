@@ -116,12 +116,12 @@ config.plasmas = {
   ["Bismuth Plasma"]       = { tier=2, amount=550,  tau=0.1, lambda=0.037, minOD=0.0, maxOD=1.8 },
   ["Radon Plasma"]         = { tier=3, amount=375,  tau=0.2, lambda=0.125, minOD=0.0, maxOD=1.6 },
   ["Technetium Plasma"]    = { tier=4, amount=250,  tau=0.3, lambda=0.296, minOD=0.0, maxOD=1.4 },
-  ["Plutonium-241 Plasma"] = { tier=5, amount=150,  tau=0.4, lambda=0.578, minOD=0.7, maxOD=1.2 }
+  ["Plutonium 241 Plasma"] = { tier=5, amount=150,  tau=0.4, lambda=0.578, minOD=0.7, maxOD=1.2 }
 }
 
 -- Iteration order for best-available plasma selection (highest tier first).
 config.plasmaKeyOrder = {
-  "Plutonium-241 Plasma","Technetium Plasma","Radon Plasma",
+  "Plutonium 241 Plasma","Technetium Plasma","Radon Plasma",
   "Bismuth Plasma","Helium Plasma"
 }
 
@@ -700,9 +700,9 @@ config.dustTargets = {
   ["Borax Dust"]               = { asteroid="Europium",            priority=4 },
 
   -- === NUCLEAR MATERIALS & NAQUADAH LINE ===
-  ["Uranium-235 Dust"]         = { asteroid="Uranium-Plutonium",   priority=2 },
-  ["Uranium-238 Dust"]         = { asteroid="Uranium-Plutonium",   priority=1 },
-  ["Plutonium-239 Dust"]       = { asteroid="Uranium-Plutonium",   priority=3 },
+  ["Uranium 235 Dust"]         = { asteroid="Uranium-Plutonium",   priority=2 },
+  ["Uranium 238 Dust"]         = { asteroid="Uranium-Plutonium",   priority=1 },
+  ["Plutonium 239 Dust"]       = { asteroid="Uranium-Plutonium",   priority=3 },
   ["Thorium Dust"]             = { asteroid="Uranium-Plutonium",   priority=4 },
   ["Naquadah Dust"]            = { asteroid="Naquadah",            priority=1 },
   ["Enriched Naquadah Dust"]   = { asteroid="Naquadah",            priority=2 },
@@ -770,7 +770,7 @@ config.conditions = {
 --    { itemName="Raw Silicon Dust",        amountToMaintain=qty("90m")  },
   { itemName="Infinity Catalyst Dust",                amountToMaintain=qty("100m") },
 --  { itemName="Tungsten Dust",           amountToMaintain=qty("40m")  },
-  { itemName="Uranium 238 Dust",            amountToMaintain=qty("50m")  }
+  { itemName="Plutonium 239 Dust",            amountToMaintain=qty("10m")  }
 }
 
 --------------------------------------------------------------------------------
