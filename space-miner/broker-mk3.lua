@@ -802,7 +802,7 @@ end
 --   - messages: serviced with a tiny event.pull timeout so we spin fast
 --   - UI redraw: ~4x/second (humans don't need more; GPU calls are expensive)
 --   - dispatch: every DISPATCH_INTERVAL
-local UI_INTERVAL = 0.25          -- seconds between full UI repaints
+local UI_INTERVAL = 1.0          -- seconds between full UI repaints
 local lastUIDraw  = 0
 
 while true do
