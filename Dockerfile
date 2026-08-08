@@ -12,9 +12,9 @@ RUN apt-get update && apt-get install -y \
 
 RUN curl -fsSL https://omp.sh/install | sh
 
-RUN export PATH=$PATH:/root/.local/bin
+ENV PATH="$PATH:/root/.local/bin"
 
-RUN export LM_STUDIO_BASE_URL=http://host.docker.internal:1234/v1
+ENV LM_STUDIO_BASE_URL=http://host.docker.internal:1234/v1
 
 WORKDIR /workspace
 

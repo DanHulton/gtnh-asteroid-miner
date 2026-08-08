@@ -1,2 +1,2 @@
 docker:
-  docker compose run --rm jail bash
+  docker compose run --rm --build jail bash
