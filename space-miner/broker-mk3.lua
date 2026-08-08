@@ -189,6 +189,8 @@ local function pollLoad(mod)
   mod.loadResult = nil
 
   if r.ok then
+    if not mod.adapter.isMachineActive() then return end -- Machine hasn't activated yet
+
     -- Diagnostics: how many polls did the read-backs take? Tells us whether
     -- store() is reliable on this setup (low) or returns early (higher).
     local s = r.stats or {}
