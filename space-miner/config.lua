@@ -775,7 +775,7 @@ config.conditions = {
   { itemName="Infinity Catalyst Dust",  amountToMaintain=qty("100m")  },
   { itemName="Tungsten Dust",           amountToMaintain=qty("100m")  },
   { itemName="Plutonium 239 Dust",      amountToMaintain=qty("100m")  },
-  { itemName="End Powder",              amounttoMaintain=qty("100m")  }
+  { itemName="End Powder",              amountToMaintain=qty("100m")  }
 }
 
 --------------------------------------------------------------------------------
