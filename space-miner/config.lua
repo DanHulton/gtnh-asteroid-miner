@@ -744,7 +744,7 @@ config.blacklist = {
 config.conditions = {
 --  { itemName="Ichorium Dust",           amountToMaintain=qty("5k")   },
 --  { itemName="Draconic Core Dust",      amountToMaintain=qty("5k")   },
-  { itemName="Tengam Dust",             amountToMaintain=qty("100m") },  -- Requires MK-III modules
+--  { itemName="Tengam Dust",             amountToMaintain=qty("100m") },  -- Requires MK-III modules
   { itemName="Mysterious Crystal Dust", amountToMaintain=qty("100m") },
   { itemName="Cosmic Neutronium Dust",  amountToMaintain=qty("100m") },
   { itemName="Trinium Dust",            amountToMaintain=qty("100m") },
