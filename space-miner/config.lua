@@ -608,6 +608,7 @@ config.dustTargets = {
   ["Infinity Catalyst Dust"]   = { asteroid="Infinity Catalyst",   priority=1 },
   ["Staballoy Dust"]           = { asteroid="Everglades",          priority=1},
   ["Kleinite Dust"]            = { asteroid="Draconic",            priority=3 },
+  ["End Powder"]               = { asteroid="MysteriousCrystal",   priority=1 },
 
   -- === RARE EARTH & LANTHANIDE PROCESSING LINE ===
   ["Trinium Dust"]             = { asteroid="Lanthanum",           priority=1 },
@@ -771,9 +772,10 @@ config.conditions = {
 --    { itemName="Quartz Dust",             amountToMaintain=qty("60m")  },
 --   { itemName="Salt",               amountToMaintain=qty("15m")  },
   { itemName="Raw Silicon Dust",        amountToMaintain=qty("100m")  },
-  { itemName="Infinity Catalyst Dust",  amountToMaintain=qty("100m") },
+  { itemName="Infinity Catalyst Dust",  amountToMaintain=qty("100m")  },
   { itemName="Tungsten Dust",           amountToMaintain=qty("100m")  },
-  { itemName="Plutonium 239 Dust",      amountToMaintain=qty("10m")  }
+  { itemName="Plutonium 239 Dust",      amountToMaintain=qty("100m")  },
+  { itemName="End Powder",              amounttoMaintain=qty("100m")  }
 }
 
 --------------------------------------------------------------------------------
