@@ -139,17 +139,42 @@ function loader.run(mod, job, deps)
     { slot = slotTip,   label = drillEntry.tip,  tag = "tip"   },
     { slot = slotRod,   label = drillEntry.rod,  tag = "rod"   },
   }
-
-  for _, it in ipairs(items) do
-    local ok = mod.iface.store({ label = it.label }, dbAddr, it.slot)
-    -- store()'s return is treated as a hint; the read-back is the truth.
-    local confirmed, polls = confirmFingerprint(db, it.slot, it.label)
-    stats.confirmPolls[it.tag] = polls
-    if not confirmed then
-      return false, "fingerprint never confirmed for " .. it.tag ..
-                    " (" .. it.label .. ") in slot " .. it.slot ..
-                    "; store() returned " .. tostring(ok)
+  mod.iface.store({ label = droneName },      dbAddr, slotDrone)
+  mod.iface.store({ label = drillEntry.tip },  dbAddr, slotTip)
+  local okDrone, okTip, okRod
+  local whichTag, errMsg
+  local confirmMeta, polls = pollUntil(function()
+    local sDrone = db.get(slotDrone)
+    if not (sDrone and sDrone.label == droneName) then
+      whichTag = "drone"
+      errMsg   = ("fingerprint never confirmed: drone '%s' not in slot %d (got %s)"):format(droneName, slotDrone, sDrone and tostring(sDrone) or "nil")
+      okDrone  = false
+    else
+      local sTip = db.get(slotTip)
+      if not (sTip and sTip.label == drillEntry.tip) then
+        whichTag = "tip"
+        errMsg   = ("fingerprint never confirmed: tip '%s' not in slot %d (got %s)"):format(drillEntry.tip, slotTip, sTip and tostring(sTip) or "none")
+        okDrone  = true  -- already confirmed, but not all OK yet
+      else
+        local sRod = db.get(slotRod)
+        if not (sRod and sRod.label == drillEntry.rod) then
+          whichTag = "rod"
+          errMsg   = ("fingerprint never confirmed: rod '%s' not in slot %d (got %s)"):format(drillEntry.rod, slotRod, sRod and tostring(sRod) or "none")
+          okDrone  = true
+        else
+          whichTag = nil
+          errMsg   = nil
+          okDrone  = true
+        end
+      end
     end
+    stats.confirmPolls.drone = polls
+    stats.confirmPolls.tip   = stats.confirmPolls.rod = stats.confirmPolls.drone
+    return not whichTag  -- true only when all three confirmed
+  end, CONFIRM_TIMEOUT)
+
+  if confirmMeta[1] then
+    return false, errMsg or ("one or more fingerprints not confirmed after ~%.1fs"):format(CONFIRM_TIMEOUT)
   end
 
   -- 3. Tell the interface to stock items matching those fingerprints.
