@@ -208,7 +208,7 @@ function loader.run(mod, job, deps)
   end, ARRIVE_TIMEOUT)
   stats.arrivePolls = polls
 
-  logger:info("END stocking interface for module " .. mod.index)
+  logger:info("END stocking interface for module " .. mod.index .. ", took " .. polls .. " polls.")
 
   if not arrived then
     clearInterfaceSlots(mod)
