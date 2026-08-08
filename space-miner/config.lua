@@ -593,7 +593,7 @@ config.dustTargets = {
   -- === TOP TIER — MK-III EXCLUSIVES (UIV+ DRONE REQUIRED) ===
   ["Ichorium Dust"]            = { asteroid="Ichorium",            priority=1 },
   ["Draconic Core Dust"]       = { asteroid="Draconic Core",       priority=1 },
-  ["Raw Tengam Dust"]           = { asteroid="Tengam",              priority=1 },
+  ["Tengam Dust"]              = { asteroid="Tengam",              priority=1 },
   ["PlatLine Dust"]            = { asteroid="PlatLine Dust",       priority=1 },
 
   -- === EXOTICS — UHV ERA AND ABOVE ===
@@ -743,7 +743,7 @@ config.blacklist = {
 config.conditions = {
 --  { itemName="Ichorium Dust",           amountToMaintain=qty("5k")   },
 --  { itemName="Draconic Core Dust",      amountToMaintain=qty("5k")   },
-  { itemName="Raw Tengam Dust",         amountToMaintain=qty("100m") },  -- Requires MK-III modules
+  { itemName="Tengam Dust",             amountToMaintain=qty("100m") },  -- Requires MK-III modules
   { itemName="Mysterious Crystal Dust", amountToMaintain=qty("100m") },
   { itemName="Cosmic Neutronium Dust",  amountToMaintain=qty("100m") },
   { itemName="Trinium Dust",            amountToMaintain=qty("100m") },
