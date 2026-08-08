@@ -134,47 +134,38 @@ function loader.run(mod, job, deps)
   end
 
   -- 2. Write fingerprints, confirming each by read-back before moving on.
-  local items = {
-    { slot = slotDrone, label = droneName,       tag = "drone" },
-    { slot = slotTip,   label = drillEntry.tip,  tag = "tip"   },
-    { slot = slotRod,   label = drillEntry.rod,  tag = "rod"   },
-  }
   mod.iface.store({ label = droneName },      dbAddr, slotDrone)
-  mod.iface.store({ label = drillEntry.tip },  dbAddr, slotTip)
-  local okDrone, okTip, okRod
-  local whichTag, errMsg
-  local confirmMeta, polls = pollUntil(function()
+  mod.iface.store({ label = drillEntry.tip }, dbAddr, slotTip)
+  mod.iface.store({ label = drillEntry.rod }, dbAddr, slotRod)
+
+  local errMsg
+  local stored, iterations = pollUntil(function()
     local sDrone = db.get(slotDrone)
     if not (sDrone and sDrone.label == droneName) then
-      whichTag = "drone"
-      errMsg   = ("fingerprint never confirmed: drone '%s' not in slot %d (got %s)"):format(droneName, slotDrone, sDrone and tostring(sDrone) or "nil")
-      okDrone  = false
-    else
-      local sTip = db.get(slotTip)
-      if not (sTip and sTip.label == drillEntry.tip) then
-        whichTag = "tip"
-        errMsg   = ("fingerprint never confirmed: tip '%s' not in slot %d (got %s)"):format(drillEntry.tip, slotTip, sTip and tostring(sTip) or "none")
-        okDrone  = true  -- already confirmed, but not all OK yet
-      else
-        local sRod = db.get(slotRod)
-        if not (sRod and sRod.label == drillEntry.rod) then
-          whichTag = "rod"
-          errMsg   = ("fingerprint never confirmed: rod '%s' not in slot %d (got %s)"):format(drillEntry.rod, slotRod, sRod and tostring(sRod) or "none")
-          okDrone  = true
-        else
-          whichTag = nil
-          errMsg   = nil
-          okDrone  = true
-        end
-      end
+      errMsg   = ("fingerprint never confirmed: drone '%s' not in slot %d (got %s)"):format(droneName, slotDrone, sDrone and tostring(sDrone) or "none")
+      return false
     end
-    stats.confirmPolls.drone = polls
-    stats.confirmPolls.tip = polls
-    stats.confirmPolls.rod = polls
-    return not whichTag  -- true only when all three confirmed
+
+    local sTip = db.get(slotTip)
+    if not (sTip and sTip.label == drillEntry.tip) then
+      errMsg   = ("fingerprint never confirmed: tip '%s' not in slot %d (got %s)"):format(drillEntry.tip, slotTip, sTip and tostring(sTip) or "none")
+      return false
+    end
+
+    local sRod = db.get(slotRod)
+    if not (sRod and sRod.label == drillEntry.rod) then
+      errMsg   = ("fingerprint never confirmed: rod '%s' not in slot %d (got %s)"):format(drillEntry.rod, slotRod, sRod and tostring(sRod) or "none")
+      return false
+    end
+
+    return true
   end, CONFIRM_TIMEOUT)
 
-  if confirmMeta[1] then
+  stats.confirmPolls.drone = iterations
+  stats.confirmPolls.tip = iterations
+  stats.confirmPolls.rod = iterations
+
+  if not stored then
     return false, errMsg or ("one or more fingerprints not confirmed after ~%.1fs"):format(CONFIRM_TIMEOUT)
   end
 
@@ -200,8 +191,8 @@ function loader.run(mod, job, deps)
 
   local arrived, polls = pollUntil(function()
     return bufferHas(droneName, 1)
-       and bufferHas(drillEntry.tip, TIPS_PER)
-       and bufferHas(drillEntry.rod, RODS_PER)
+      and bufferHas(drillEntry.tip, TIPS_PER)
+      and bufferHas(drillEntry.rod, RODS_PER)
   end, ARRIVE_TIMEOUT)
   stats.arrivePolls = polls
 
