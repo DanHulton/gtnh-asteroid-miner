@@ -1,0 +1,7 @@
+services:
+  jail:
+    build: .
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./space-miner:/workspace
