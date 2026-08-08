@@ -770,6 +770,7 @@ initModuleBuffers()
 
 local lastRegister    = os.time()
 local lastLoopTime    = os.time()
+local lastDrawTime    = 0
 local REGISTER_INTERVAL = 30 * 20  -- Minecraft seconds (1.5 real seconds); status changes trigger immediate registration
 
 while true do
@@ -800,5 +801,8 @@ while true do
     lastRegister = now
   end
 
-  drawModules()
+  if os.time() - lastDrawTime >= 1 then
+    drawModules()
+    lastDrawTime = os.time()
+  end
 end
