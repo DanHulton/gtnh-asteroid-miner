@@ -111,6 +111,8 @@ function loader.run(mod, job, deps)
 
   -- 1. Start clean: empty the input bus and wipe our db slots so we can't
   --    accidentally read a previous job's fingerprint.
+  logger:info("START clearing module " .. mod.index)
+
   clearInputBus(mod)
   db.clear(slotDrone)
   db.clear(slotTip)
@@ -133,10 +135,15 @@ function loader.run(mod, job, deps)
     return false, "interface buffer did not drain before load (stale items stuck)"
   end
 
+  logger:info("END clearing module " .. mod.index)
+
   -- 2. Write fingerprints, confirming each by read-back before moving on.
+  logger:info("START storing fingerprints for module " .. mod.index)
+
   mod.iface.store({ label = droneName },      dbAddr, slotDrone)
   mod.iface.store({ label = drillEntry.tip }, dbAddr, slotTip)
   mod.iface.store({ label = drillEntry.rod }, dbAddr, slotRod)
+
 
   local errMsg
   local stored, iterations = pollUntil(function()
@@ -161,6 +168,8 @@ function loader.run(mod, job, deps)
     return true
   end, CONFIRM_TIMEOUT)
 
+  logger:info("END storing fingerprints for module " .. mod.index)
+
   stats.confirmPolls.drone = iterations
   stats.confirmPolls.tip = iterations
   stats.confirmPolls.rod = iterations
@@ -170,6 +179,9 @@ function loader.run(mod, job, deps)
   end
 
   -- 3. Tell the interface to stock items matching those fingerprints.
+
+  logger:info("START stocking interface for module " .. mod.index)
+
   mod.iface.setInterfaceConfiguration(1, dbAddr, slotDrone, 1)
   mod.iface.setInterfaceConfiguration(2, dbAddr, slotTip, TIPS_PER)
   mod.iface.setInterfaceConfiguration(3, dbAddr, slotRod, RODS_PER)
@@ -196,6 +208,8 @@ function loader.run(mod, job, deps)
   end, ARRIVE_TIMEOUT)
   stats.arrivePolls = polls
 
+  logger:info("END stocking interface for module " .. mod.index)
+
   if not arrived then
     clearInterfaceSlots(mod)
     return false, "items did not arrive: drone=" .. tostring(bufferHas(droneName, 1)) ..
@@ -211,6 +225,9 @@ function loader.run(mod, job, deps)
   --    of trusting positions, we SCAN the buffer for the slot that actually holds
   --    each item and move that one. This is correct regardless of how the
   --    interface reorders slots or whether clearing drains them.
+
+  logger:info("START stocking bus for module " .. mod.index)
+
   local busSize = mod.transposer.getInventorySize(mod.conf.interfaceSide) or 9
 
   -- Find the buffer slot whose item matches `label` with at least `minSize`.
@@ -246,7 +263,11 @@ function loader.run(mod, job, deps)
   clearInterfaceSlots(mod)
   sched.sleep(0.2)
 
+  logger:info("END stocking bus for module " .. mod.index)
+
   -- 6. Verify the right drone landed in the bus (catches any cross-up).
+  logger:info("START verification for module " .. mod.index)
+
   local droneStack = mod.transposer.getStackInSlot(mod.conf.inputBusSide, 1)
   local tipStack   = mod.transposer.getStackInSlot(mod.conf.inputBusSide, 2)
   local rodStack   = mod.transposer.getStackInSlot(mod.conf.inputBusSide, 3)
@@ -261,6 +282,8 @@ function loader.run(mod, job, deps)
   if not rodStack or (rodStack.size or 0) < RODS_PER then
     return false, "rod shortfall: got " .. (rodStack and rodStack.size or 0)
   end
+
+  logger:info("END verification for module " .. mod.index)
 
   return true, stats
 end
