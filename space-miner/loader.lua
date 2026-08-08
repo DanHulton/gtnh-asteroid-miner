@@ -169,7 +169,7 @@ function loader.run(mod, job, deps)
       end
     end
     stats.confirmPolls.drone = polls
-    stats.confirmPolls.tip   = polls
+    stats.confirmPolls.tip = polls
     stats.confirmPolls.rod = polls
     return not whichTag  -- true only when all three confirmed
   end, CONFIRM_TIMEOUT)
